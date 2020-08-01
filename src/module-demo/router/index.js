@@ -1,7 +1,7 @@
 /*
- * @Author: itcast
- * @Description: xxx业务模块
- * @Date: 2018-04-13 16:13:27
+ * @Author: itcast 
+ * @Description: xxx业务模块 
+ * @Date: 2018-04-13 16:13:27 
  * @Last Modified by: hans.taozhiwei
  * @Last Modified time: 2018-09-03 11:12:47
  */
@@ -15,17 +15,17 @@ export default [
     path: '/saas-demo',
     component: Layout,
     redirect: 'noredirect',
-    name: 'saas-demo',
+    name: 'demo',
     meta: {
       title: 'xxx业务模块管理',
       icon: 'component'
     },
     children: [
       {
-        path: 'index',
-        component: _import('demo/pages/index'),
-        name: 'saas-demo',
-        meta: {title: 'xxx业务模块', icon: 'component', noCache: true}
+        path: 'index',  //请求地址
+        component: _import('demo/pages/index'), //跳转的vue视图
+        name: 'demo-index',
+        meta: {title: 'demo', icon: 'component', noCache: true}
       }
     ]
   }

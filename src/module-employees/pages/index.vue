@@ -47,13 +47,23 @@
               </el-switch>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" align="center" width="220">
+          <el-table-column fixed="right" label="操作" align="center" width="260">
             <template slot-scope="scope">
               <router-link :to="{'path':'/employees/details/' + scope.row.id}" class="el-button el-button--text el-button--small">
                 查看
               </router-link>
-              <el-button @click="handleRole(scope.row)" type="text" size="small">分配角色</el-button>
-              <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="handlPositive(scope.row.id)" type="text" size="small">转正</el-button>
+              <router-link :to="{'path':'/employees/adjustPost/' + scope.row.id}" class="el-button el-button--text el-button--small">
+                调岗
+              </router-link>
+              <router-link :to="{'path':'/employees/leave/' + scope.row.id}" class="el-button el-button--text el-button--small">
+                离职
+              </router-link>   
+              <el-button @click="handleRole(scope.row)" type="text" size="small">角色</el-button>
+              <!--
+              <el-button v-if="show('point-user-delete')" @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+              -->
+              <el-button  @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -66,7 +76,9 @@
         <!-- 新增员工弹层 -->
         <component v-bind:is="employeesAdd" ref="addUser" @doQuery="doQuery"></component>
         <!--分配角色组件 -->
-
+        <component v-bind:is="addRole" ref="addRole"></component>
+        <!-- 转正 -->
+        <component v-bind:is="employeesPositive" ref="positive"></component>
       </el-card>
     </div>
   </div>
@@ -77,14 +89,26 @@ import constantApi from '@/api/constant/employees'
 import {list,remove} from "@/api/base/users"
 import PageTool from './../../components/page/page-tool'
 import employeesAdd from './../components/add'
+import addRole from './../components/addRole'
+import {hasPermissionPoint} from '@/utils/permission'
+import employeesPositive from './../components/turn-positive'
+import employeesSet from './../components/setting'
+import {
+  positiveDetail,
+  settDetail,
+  accountStatus
+} from '@/api/base/employees'
 export default {
   name: 'employeesList',
   components: {
-    PageTool,employeesAdd
+    PageTool,employeesAdd,addRole,employeesPositive,employeesSet
   },
   data() {
     return {
       employeesAdd: 'employeesAdd',
+      employeesPositive: 'employeesPositive',
+      employeesSet: 'employeesSet', 
+      addRole: 'addRole',
       baseData: constantApi,
       dataList: [],
       counts: '',
@@ -95,6 +119,9 @@ export default {
     }
   },
   methods: {
+    show(name) {
+      return hasPermissionPoint(name)
+    },
     // 业务方法
     doQuery(params) {
         list(this.requestParameters)
@@ -127,12 +154,21 @@ export default {
         }
       ).then(() => {
           remove({ id: item.id })
-            .then(response => {
-              this.$message.success('删除成功' + '!')
-              this.doQuery();
+            .then(res => {
+              this.$message({message:res.data.message,type:res.data.success?'success':'error'})
+              if(res.data.success) {
+                this.doQuery();
+              }
             })
         })
-    }
+    },
+    handleRole(item) {
+      this.$refs.addRole.toAssignPrem(item.id)
+    },
+    /**转正代码 */
+    handlPositive(id) {
+      this.$refs.positive.dialogFormV(id)
+    },
   },
   // 创建完毕状态
   created: function() {

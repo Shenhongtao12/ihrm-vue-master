@@ -12,20 +12,27 @@ module.exports = {
     proxyTable: {
       //企业信息请求的远程服务
       '/api/company': {
-        target: 'http://localhost:9001/company/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api/company': ''
-        }
-      },
-      //api/sys/     user
-      '/api/sys': {
-        target: 'http://localhost:9002/sys/',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api/sys': ''
-        }
-      }
+          target: 'http://localhost:9001/company/',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api/company': ''
+          }
+        },
+        //api/sys/     user
+       '/api/sys': {
+          target: 'http://localhost:9002/sys/',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api/sys': ''
+          }
+        },
+        '/api/employees': {
+          target: 'http://localhost:9003/employees/',
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api/employees': ''
+          }
+        } 
     },
 
     // Various Dev Server settings

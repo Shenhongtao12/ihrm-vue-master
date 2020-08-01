@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import {saveOrupdate} from "@/api/base/dept"
+import {list,saveOrupdate,find,deleteById} from "@/api/base/dept"
 export default {
  data () {
      return {

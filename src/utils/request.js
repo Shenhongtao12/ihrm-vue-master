@@ -157,6 +157,23 @@ export const createImgAPI = (url, method, data) => {
     ...config
   })
 }
+export const createImgUpAPI = (url, method, data) => {
+
+  let config = {}
+  config.data = data
+  config.headers = {
+    'Cache-Control': 'no-cache'
+    // 'Content-Type': 'multipart/form-data'
+    // 'Content-Type': 'multipart/form-data;boundary = ' + new Date().getTime()
+  }
+  // config.responseType = 'blob'
+  config.transformRequest = data
+  return instance({
+    url,
+    method,
+    ...config
+  })
+}
 // 组织架构导出
 export const createFileAPI = (url, method, data) => {
   let config = {}
@@ -188,10 +205,6 @@ export const createDown = (url, method, data) => {
     config.params = data
   } else {
     config.data = data
-  }
-  config.headers = {
-    'Cache-Control': 'no-cache',
-    'Content-Type': 'application/x-www-form-urlencoded'
   }
   config.responseType = 'blob'
   return instance({
